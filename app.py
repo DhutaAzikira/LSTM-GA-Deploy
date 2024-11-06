@@ -261,6 +261,10 @@ def main():
     predict_price = df_pred['M1'].iloc[0]
     current_price = df['Price'].iloc[-1]
 
+    datelusa = df['Date'].iloc[-3]
+    dateyesterday = df['Date'].iloc[-2]
+    datetoday = df['Date'].iloc[-1]
+
     print(df)
 
     model_predictions = []
@@ -282,22 +286,32 @@ def main():
     selected_models = [col for col in df_pred.columns if st.sidebar.checkbox(col, value=True)]
 
     st.title("Bitcoin Price Prediction with LSTM Genetic Algorithm")
-    st.markdown("This app predicts Bitcoin prices using a genetic algorithm and pre-trained LSTM models.\nMade by @dhuta_azikira")
-    
+    st.markdown('''This app predicts Bitcoin prices using a genetic algorithm and pre-trained LSTM models.  
+    Made by @dhuta_azikira''')
+    st.divider()
     # Display prices with color-coded increase or decrease
     col1, col2, col3, col4 = st.columns(4)
+    
     with col1:
-        st.metric(label=f"Price at {df['Date'].iloc[-3]}", value=f"${old_price:.2f}")
+        st.metric(label="Day Before Yesterday's Price", value=f"${old_price:.2f}")
+        st.markdown(f"{datelusa} 12AM EST")
     with col2:
         st.metric(label="Yesterday's Price", value=f"${yesterday_price:.2f}")
+        st.markdown(f"{dateyesterday} 12AM EST")
     with col3:
-        st.metric(label="Current Price", value=f"${current_price:.2f}")
+        st.metric(label="Current Price", value=f"${current_price:.2f}", delta = current_price-yesterday_price)
         st.markdown("Real-Time data, may subject to change")
     with col4:
         st.metric(label="Predicted Price", value=f"${predict_price:.2f}", 
                   delta=f"{direction:.2f} ({percentage_change:.2f}%)", delta_color="normal")
-        st.markdown("Tomorrow at 12:00 PM")
-
+        st.markdown(f"Price prediction at {datetoday} 12AM EST")
+    
+    st.markdown('''
+    **Prediction will update every 12 PM WIB**  
+    **12 hours difference from WIB*
+    ''')
+    
+    st.divider()
     # Historical chart with increased height
     st.subheader("Historical Bitcoin Prices (Last 365 Days)")
     st.line_chart(df.set_index("Date")["Price"][365:], height=500)
