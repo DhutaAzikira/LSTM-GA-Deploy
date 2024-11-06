@@ -1,7 +1,7 @@
-streamlit==1.22.0
-pandas==2.2.2
+streamlit
+pandas
 numpy
 requests
-tensorflow==2.10.0
-scikit-learn==1.5.2
+tensorflow
+scikit-learn
 matplotlib
