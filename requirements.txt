@@ -1,7 +1,7 @@
 streamlit==1.22.0
-pandas
-numpy
+pandas==2.2.2
+numpy==1.26
 requests
-tensorflow-cpu
+tensorflow==2.10.0
 scikit-learn
 matplotlib
