@@ -281,8 +281,9 @@ def main():
     timeframe = st.sidebar.selectbox("Choose prediction timeframe (days)", options=[1, 3, 7, 14], index=2)
     selected_models = [col for col in df_pred.columns if st.sidebar.checkbox(col, value=True)]
 
-    st.title("Bitcoin Price Prediction")
-
+    st.title("Bitcoin Price Prediction with LSTM Genetic Algorithm")
+    st.markdown("This app predicts Bitcoin prices using a genetic algorithm and pre-trained LSTM models.\nMade by @dhuta_azikira")
+    
     # Display prices with color-coded increase or decrease
     col1, col2, col3, col4 = st.columns(4)
     with col1:
@@ -291,11 +292,11 @@ def main():
         st.metric(label="Yesterday's Price", value=f"${yesterday_price:.2f}")
     with col3:
         st.metric(label="Current Price", value=f"${current_price:.2f}")
-        st.write("Real-Time data, may subject to change")
+        st.markdown("Real-Time data, may subject to change")
     with col4:
         st.metric(label="Predicted Price", value=f"${predict_price:.2f}", 
                   delta=f"{direction:.2f} ({percentage_change:.2f}%)", delta_color="normal")
-        st.write("Today at 00:00")
+        st.markdown("Tomorrow at 12:00 PM")
 
     # Historical chart with increased height
     st.subheader("Historical Bitcoin Prices (Last 365 Days)")
