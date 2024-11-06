@@ -299,7 +299,7 @@ def main():
         st.metric(label="Yesterday's Price", value=f"${yesterday_price:.2f}")
         st.markdown(f"{dateyesterday} 12AM EST")
     with col3:
-        st.metric(label="Current Price", value=f"${current_price:.2f}", delta = current_price-yesterday_price)
+        st.metric(label="Current Price", value=f"${current_price:.2f}", delta = f"{current_price-yesterday_price} ({current_price-yesterday_price/100})%")
         st.markdown("Real-Time data, may subject to change")
     with col4:
         st.metric(label="Predicted Price", value=f"${predict_price:.2f}", 
@@ -310,7 +310,7 @@ def main():
     **Prediction will update every 12 PM WIB**  
     **12 hours difference from WIB*
     ''')
-    
+
     st.divider()
     # Historical chart with increased height
     st.subheader("Historical Bitcoin Prices (Last 365 Days)")
