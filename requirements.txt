@@ -2,6 +2,6 @@ streamlit
 pandas
 numpy
 requests
-tensorflow
+tensorflow-cpu
 scikit-learn
 matplotlib
