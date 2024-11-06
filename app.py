@@ -4,6 +4,7 @@ import numpy as np
 import streamlit as st
 import requests
 import pickle
+import tensorflow
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import *
 from sklearn.preprocessing import MinMaxScaler
@@ -117,16 +118,63 @@ def load_model_non(csv_file):
 
     return models
 
+def load_models(txtfile):
+    with open(txtfile, 'rb') as f:  # Load finalResult to variable
+        old_models = pickle.load(f)
+
+    models = []
+
+    for i in range(len(old_models)):
+        model = Sequential()
+        cLayer = old_models[i][1][0]
+        cNeurons = old_models[i][1][3]
+        cRecurDrop = old_models[i][1][2]
+        cDroprate = old_models[i][1][1]
+        weights = old_models[i][2]
+
+        for i in range(cLayer):
+            return_sequences = True if i < cLayer - 1 else False
+            neurons = cNeurons[i] if i < len(cNeurons) else random.choice(cNeurons)
+            recurrent_dropout = cRecurDrop[i] if i < len(cRecurDrop) else random.choice(cRecurDrop)
+            dropout_rate = cDroprate[i] if i < len(cDroprate) else random.choice(cDroprate)
+
+            if i == 0:
+                model.add(LSTM(neurons,
+                                return_sequences=return_sequences,
+                                recurrent_dropout=recurrent_dropout,
+                                input_shape=(30, 5)))
+            else:
+                model.add(LSTM(neurons,
+                                return_sequences=return_sequences,
+                                recurrent_dropout=recurrent_dropout))
+            model.add(Dropout(dropout_rate))
+
+        model.add(Dense(25))
+        model.add(Dense(5))
+
+        model.build()
+
+        model.set_weights(weights)
+
+        models.append(model)
+        
+    best_model = models.pop(7)
+    models.insert(0, best_model) 
+
+    return models
+
+
+
 def prepare_data(data, txtfile):
     scaler = MinMaxScaler()
     scaled = scaler.fit_transform(data)
 
     x, _ = genetic.create_sequences(scaled, 30)
-
-    try:
-        models = load_model(txtfile)
-    except:
-        models = load_model_non(txtfile)
+    models = load_models(txtfile)
+    # try:
+        
+    # except:
+    #     models = load_model_non(txtfile)
 
     return x, models, scaler
 
@@ -203,7 +251,7 @@ def main():
     df = pd.read_sql('SELECT * FROM bitcoin_prices', conn)
     data = df.drop('Date', axis=1)
 
-    df_pred, params = predict(data,'Result NonKeras 2024-11-03_16-07-37.txt',steps_ahead=14)
+    df_pred, params = predict(data,'Result test2.txt',steps_ahead=14)
     
     
     #Predict Price at Today 00:00
